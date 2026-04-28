@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Car {
+  id           String      @id @default(cuid())
+  slug         String      @unique
+  title        String
+  make         String
+  model        String
+  year         Int
+  price        Int
+  mileage      Int
+  fuelType     String
+  transmission String
+  driveType    String
+  bodyType     String
+  colour       String
+  seats        Int         @default(5)
+  condition    String      @default("Excellent")
+  importFrom   String?
+  description  String?
+  location     String
+  status       CarStatus   @default(DRAFT)
+  featured     Boolean     @default(false)
+  showroomId   String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  showroom     Showroom?   @relation(fields: [showroomId], references: [id])
+  images       Image[]
+  leads        Lead[]
+  enquiries    Enquiry[]
+  testDrives   TestDrive[]
+}
+
+enum CarStatus {
+  DRAFT
+  LIVE
+  SOLD
+  ARCHIVED
+}
+
+model Image {
+  id         String  @id @default(cuid())
+  carId      String
+  url        String
+  imagekitId String?
+  order      Int     @default(0)
+  isPrimary  Boolean @default(false)
+  car        Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
+
+model Lead {
+  id         String     @id @default(cuid())
+  carId      String
+  buyerName  String
+  buyerPhone String
+  buyerEmail String?
+  source     LeadSource @default(WHATSAPP)
+  status     LeadStatus @default(NEW)
+  agentId    String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  car        Car        @relation(fields: [carId], references: [id])
+  agent      User?      @relation(fields: [agentId], references: [id])
+  notes      LeadNote[]
+  testDrives TestDrive[]
+}
+
+enum LeadSource {
+  WHATSAPP
+  FORM
+  DIRECT
+  REFERRAL
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  TEST_DRIVE_BOOKED
+  CLOSED
+  LOST
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  agentId   String
+  note      String
+  createdAt DateTime @default(now())
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  agent     User     @relation(fields: [agentId], references: [id])
+}
+
+model TestDrive {
+  id          String          @id @default(cuid())
+  leadId      String
+  carId       String
+  scheduledAt DateTime
+  status      TestDriveStatus @default(REQUESTED)
+  notes       String?
+  createdAt   DateTime        @default(now())
+  lead        Lead            @relation(fields: [leadId], references: [id])
+  car         Car             @relation(fields: [carId], references: [id])
+}
+
+enum TestDriveStatus {
+  REQUESTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model Showroom {
+  id               String   @id @default(cuid())
+  name             String
+  location         String
+  contactEmail     String
+  contactPhone     String
+  active           Boolean  @default(false)
+  approvalRequired Boolean  @default(true)
+  brandingVisible  Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  cars             Car[]
+  users            User[]
+}
+
+model User {
+  id         String    @id @default(cuid())
+  email      String    @unique
+  fullName   String
+  phone      String?
+  role       UserRole  @default(AGENT)
+  showroomId String?
+  createdAt  DateTime  @default(now())
+  showroom   Showroom? @relation(fields: [showroomId], references: [id])
+  leads      Lead[]
+  notes      LeadNote[]
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  AGENT
+  SHOWROOM
+}
+
+model Enquiry {
+  id            String   @id @default(cuid())
+  carId         String
+  buyerName     String?
+  buyerPhone    String?
+  message       String?
+  waLinkClicked Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  car           Car      @relation(fields: [carId], references: [id])
+}
