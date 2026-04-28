@@ -51,7 +51,7 @@ export default function TestDriveForm({ carId }: { carId: string }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-bold text-vgray uppercase tracking-widest mb-1.5">
             Your name
@@ -80,7 +80,7 @@ export default function TestDriveForm({ carId }: { carId: string }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-bold text-vgray uppercase tracking-widest mb-1.5">
             Preferred date

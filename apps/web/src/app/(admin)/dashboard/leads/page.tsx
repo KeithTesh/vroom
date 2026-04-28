@@ -34,9 +34,9 @@ export default async function LeadsPage({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-7 flex-wrap gap-4">
+      <div className="flex items-center justify-between mb-6 md:mb-7 flex-wrap gap-4">
         <div>
-          <h1 className="font-display text-2xl font-extrabold text-dark">Lead tracker</h1>
+          <h1 className="font-display text-xl md:text-2xl font-extrabold text-dark">Lead tracker</h1>
           <p className="text-sm text-vgray mt-1">{leads.length} leads total</p>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default async function LeadsPage({
       <div className="flex gap-2 mb-6 flex-wrap">
         <Link
           href="/dashboard/leads"
-          className={`text-xs font-bold px-4 py-2 rounded-lg border transition-colors ${
+          className={`text-xs font-bold px-3 py-2 rounded-lg border transition-colors cursor-pointer ${
             !status
               ? 'bg-orange text-white border-orange'
               : 'bg-white text-vgray border-vgray-border hover:border-orange-mid'
@@ -57,7 +57,7 @@ export default async function LeadsPage({
           <Link
             key={s}
             href={`/dashboard/leads?status=${s}`}
-            className={`text-xs font-bold px-4 py-2 rounded-lg border transition-colors ${
+            className={`text-xs font-bold px-3 py-2 rounded-lg border transition-colors cursor-pointer ${
               status === s
                 ? 'bg-orange text-white border-orange'
                 : 'bg-white text-vgray border-vgray-border hover:border-orange-mid'
@@ -68,83 +68,132 @@ export default async function LeadsPage({
         ))}
       </div>
 
-      {/* Leads table */}
+      {/* Leads list */}
       <div className="bg-white border border-vgray-border rounded-card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-vgray-light text-xs font-bold text-vgray uppercase tracking-widest border-b border-vgray-border">
-                <th className="text-left px-6 py-3">Buyer</th>
-                <th className="text-left px-6 py-3">Car interested in</th>
-                <th className="text-left px-6 py-3">Status</th>
-                <th className="text-left px-6 py-3">Source</th>
-                <th className="text-left px-6 py-3">Date</th>
-                <th className="text-left px-6 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leads.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="text-center py-16 text-vgray">
-                    <div className="text-4xl mb-3">📋</div>
-                    <p className="font-display font-bold text-dark mb-1">No leads yet</p>
-                    <p className="text-sm">Leads appear here when buyers enquire on the website</p>
-                  </td>
-                </tr>
-              ) : (
-                leads.map(lead => (
-                  <tr key={lead.id} className="border-t border-vgray-border hover:bg-vgray-light/40 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-dark">{lead.buyerName}</div>
-                      <div className="text-xs text-orange font-semibold mt-0.5">
-                        {lead.buyerPhone}
-                      </div>
+        {leads.length === 0 ? (
+          <div className="text-center py-16 text-vgray">
+            <div className="text-4xl mb-3">📋</div>
+            <p className="font-display font-bold text-dark mb-1">No leads yet</p>
+            <p className="text-sm">Leads appear here when buyers enquire on the website</p>
+          </div>
+        ) : (
+          <>
+            {/* Mobile cards */}
+            <div className="md:hidden divide-y divide-vgray-border">
+              {leads.map(lead => (
+                <div key={lead.id} className="p-4 space-y-3">
+                  {/* Buyer + car */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-semibold text-dark text-sm">{lead.buyerName}</div>
+                      <div className="text-xs text-orange font-semibold mt-0.5">{lead.buyerPhone}</div>
                       {lead.buyerEmail && (
                         <div className="text-xs text-vgray mt-0.5">{lead.buyerEmail}</div>
                       )}
-                    </td>
-                    <td className="px-6 py-4 text-vgray">
-                      <div className="font-medium text-dark">
-                        {lead.car.year} {lead.car.make} {lead.car.model}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <LeadStatusUpdater leadId={lead.id} currentStatus={lead.status} />
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-xs font-semibold bg-vgray-light text-vgray px-2.5 py-1 rounded-lg border border-vgray-border">
-                        {lead.source}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-xs text-vgray whitespace-nowrap">
+                    </div>
+                    <span className="text-xs font-semibold bg-vgray-light text-vgray px-2 py-1 rounded-lg border border-vgray-border shrink-0">
+                      {lead.source}
+                    </span>
+                  </div>
+                  <div className="text-xs text-dark font-medium">
+                    {lead.car.year} {lead.car.make} {lead.car.model}
+                  </div>
+                  {/* Status updater */}
+                  <LeadStatusUpdater leadId={lead.id} currentStatus={lead.status} />
+                  {/* Actions + date */}
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex gap-2">
+                      <a
+                        href={`tel:${lead.buyerPhone}`}
+                        className="text-xs font-bold bg-orange-light text-orange-dark px-3 py-2 rounded-lg hover:bg-orange hover:text-white transition-colors"
+                      >
+                        📞 Call
+                      </a>
+                      <a
+                        href={`https://wa.me/${lead.buyerPhone.replace(/\D/g, '')}?text=Hi ${lead.buyerName}, this is Vroom calling about the ${lead.car.make} ${lead.car.model}.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-bold bg-[#E1F5EE] text-[#0F6E56] px-3 py-2 rounded-lg hover:bg-[#1D9E75] hover:text-white transition-colors flex items-center gap-1"
+                      >
+                        <MessageCircle size={11} /> WA
+                      </a>
+                    </div>
+                    <span className="text-xs text-vgray">
                       {new Date(lead.createdAt).toLocaleDateString('en-KE', {
                         day: 'numeric', month: 'short', year: 'numeric'
                       })}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
-                        <a
-                          href={`tel:${lead.buyerPhone}`}
-                          className="text-xs font-bold bg-orange-light text-orange-dark px-3 py-1.5 rounded-lg hover:bg-orange hover:text-white transition-colors"
-                        >
-                          📞 Call
-                        </a>
-                        <a
-                          href={`https://wa.me/${lead.buyerPhone.replace(/\D/g, '')}?text=Hi ${lead.buyerName}, this is Vroom calling about the ${lead.car.make} ${lead.car.model}.`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs font-bold bg-[#E1F5EE] text-[#0F6E56] px-3 py-1.5 rounded-lg hover:bg-[#1D9E75] hover:text-white transition-colors flex items-center gap-1"
-                        >
-                          <MessageCircle size={11} /> WA
-                        </a>
-                      </div>
-                    </td>
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-vgray-light text-xs font-bold text-vgray uppercase tracking-widest border-b border-vgray-border">
+                    <th className="text-left px-6 py-3">Buyer</th>
+                    <th className="text-left px-6 py-3">Car interested in</th>
+                    <th className="text-left px-6 py-3">Status</th>
+                    <th className="text-left px-6 py-3">Source</th>
+                    <th className="text-left px-6 py-3">Date</th>
+                    <th className="text-left px-6 py-3">Actions</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  {leads.map(lead => (
+                    <tr key={lead.id} className="border-t border-vgray-border hover:bg-vgray-light/40 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-dark">{lead.buyerName}</div>
+                        <div className="text-xs text-orange font-semibold mt-0.5">{lead.buyerPhone}</div>
+                        {lead.buyerEmail && (
+                          <div className="text-xs text-vgray mt-0.5">{lead.buyerEmail}</div>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-vgray">
+                        <div className="font-medium text-dark">
+                          {lead.car.year} {lead.car.make} {lead.car.model}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <LeadStatusUpdater leadId={lead.id} currentStatus={lead.status} />
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-xs font-semibold bg-vgray-light text-vgray px-2.5 py-1 rounded-lg border border-vgray-border">
+                          {lead.source}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-vgray whitespace-nowrap">
+                        {new Date(lead.createdAt).toLocaleDateString('en-KE', {
+                          day: 'numeric', month: 'short', year: 'numeric'
+                        })}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-2">
+                          <a
+                            href={`tel:${lead.buyerPhone}`}
+                            className="text-xs font-bold bg-orange-light text-orange-dark px-3 py-1.5 rounded-lg hover:bg-orange hover:text-white transition-colors"
+                          >
+                            📞 Call
+                          </a>
+                          <a
+                            href={`https://wa.me/${lead.buyerPhone.replace(/\D/g, '')}?text=Hi ${lead.buyerName}, this is Vroom calling about the ${lead.car.make} ${lead.car.model}.`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-bold bg-[#E1F5EE] text-[#0F6E56] px-3 py-1.5 rounded-lg hover:bg-[#1D9E75] hover:text-white transition-colors flex items-center gap-1"
+                          >
+                            <MessageCircle size={11} /> WA
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )

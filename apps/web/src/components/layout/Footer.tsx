@@ -1,5 +1,36 @@
 import Link from 'next/link'
 
+const LINKS = [
+  {
+    title: 'Browse',
+    links: [
+      { label: 'All cars',     href: '/browse' },
+      { label: 'SUVs & 4x4s', href: '/browse?bodyType=SUV' },
+      { label: 'Saloons',      href: '/browse?bodyType=Saloon' },
+      { label: 'Hatchbacks',   href: '/browse?bodyType=Hatchback' },
+      { label: 'Pickups',      href: '/browse?bodyType=Pickup' },
+    ],
+  },
+  {
+    title: 'Services',
+    links: [
+      { label: 'Finance',      href: '/browse' },
+      { label: 'Insurance',    href: '/browse' },
+      { label: 'Inspections',  href: '/browse' },
+      { label: 'Test drives',  href: '/browse' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About Vroom',  href: '/' },
+      { label: 'How it works', href: '/#how-it-works' },
+      { label: 'Careers',      href: '/' },
+      { label: 'Contact',      href: `https://wa.me/${process.env.NEXT_PUBLIC_WA_NUMBER || '254700000000'}` },
+    ],
+  },
+]
+
 export default function Footer() {
   return (
     <footer className="bg-dark text-white">
@@ -15,23 +46,19 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Links */}
-        {[
-          { title: 'Browse',   links: ['All cars','SUVs & 4x4s','Saloons','Hatchbacks','Pickups'] },
-          { title: 'Services', links: ['Finance','Insurance','Inspections','Test drives'] },
-          { title: 'Company',  links: ['About Vroom','How it works','Careers','Contact'] },
-        ].map(col => (
+        {/* Link columns */}
+        {LINKS.map(col => (
           <div key={col.title}>
             <div className="text-xs font-bold text-white/50 uppercase tracking-widest mb-4">
               {col.title}
             </div>
             {col.links.map(l => (
               <Link
-                key={l}
-                href="#"
-                className="block text-sm text-white/55 hover:text-orange mb-2.5 transition-colors"
+                key={l.label}
+                href={l.href}
+                className="block text-sm text-white/55 hover:text-orange mb-2.5 transition-colors cursor-pointer"
               >
-                {l}
+                {l.label}
               </Link>
             ))}
           </div>
@@ -43,8 +70,8 @@ export default function Footer() {
         <p className="text-xs text-white/25">
           © 2025 Vroom Kenya Ltd. All rights reserved. Mombasa, Kenya.
         </p>
-        <div className="flex gap-2">
-          {['M-Pesa','KCB','Equity Bank','Visa'].map(p => (
+        <div className="flex gap-2 flex-wrap">
+          {['M-Pesa', 'KCB', 'Equity Bank', 'Visa'].map(p => (
             <span
               key={p}
               className="text-xs font-bold text-white/50 bg-white/10 border border-white/10 px-2.5 py-1 rounded"

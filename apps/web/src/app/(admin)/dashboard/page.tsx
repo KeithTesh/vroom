@@ -44,15 +44,15 @@ export default async function DashboardPage() {
     getRecentLeads(),
   ])
 
-  const now     = new Date()
-  const hour    = now.getHours()
+  const now      = new Date()
+  const hour     = now.getHours()
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening'
 
   return (
     <div>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="font-display text-2xl font-extrabold text-dark">
+      <div className="mb-6 md:mb-8">
+        <h1 className="font-display text-xl md:text-2xl font-extrabold text-dark">
           {greeting}, Admin 👋
         </h1>
         <p className="text-sm text-vgray mt-1">
@@ -61,7 +61,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Metric cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
         {[
           {
             label: 'New leads',
@@ -80,7 +80,7 @@ export default async function DashboardPage() {
             href:  '/dashboard/inventory',
           },
           {
-            label: 'Test drives pending',
+            label: 'Test drives',
             value: stats.testDrives,
             sub:   'Awaiting confirmation',
             icon:  <Calendar size={18} className="text-orange" />,
@@ -99,93 +99,132 @@ export default async function DashboardPage() {
           <Link
             key={card.label}
             href={card.href}
-            className="bg-white border border-vgray-border rounded-card p-5 hover:border-orange-mid hover:shadow-sm transition-all"
+            className="bg-white border border-vgray-border rounded-card p-4 md:p-5 hover:border-orange-mid hover:shadow-sm transition-all cursor-pointer"
           >
-            <div className={`w-10 h-10 ${card.bg} rounded-lg flex items-center justify-center mb-3`}>
+            <div className={`w-9 h-9 md:w-10 md:h-10 ${card.bg} rounded-lg flex items-center justify-center mb-3`}>
               {card.icon}
             </div>
-            <div className="font-display text-3xl font-extrabold text-dark mb-0.5">
+            <div className="font-display text-2xl md:text-3xl font-extrabold text-dark mb-0.5">
               {card.value}
             </div>
             <div className="text-xs text-vgray font-medium">{card.label}</div>
-            <div className="text-xs text-vgray mt-0.5 opacity-60">{card.sub}</div>
+            <div className="text-xs text-vgray mt-0.5 opacity-60 hidden sm:block">{card.sub}</div>
           </Link>
         ))}
       </div>
 
-      {/* Recent leads table */}
+      {/* Recent leads */}
       <div className="bg-white border border-vgray-border rounded-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-vgray-border flex items-center justify-between">
+        <div className="px-4 md:px-6 py-4 border-b border-vgray-border flex items-center justify-between">
           <h2 className="font-display text-base font-bold text-dark">Recent leads</h2>
           <Link
             href="/dashboard/leads"
-            className="text-xs font-bold text-orange bg-orange-light border border-orange-mid px-3 py-1.5 rounded-lg hover:bg-orange hover:text-white transition-colors"
+            className="text-xs font-bold text-orange bg-orange-light border border-orange-mid px-3 py-1.5 rounded-lg hover:bg-orange hover:text-white transition-colors cursor-pointer"
           >
             View all →
           </Link>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-vgray-light text-xs font-bold text-vgray uppercase tracking-widest">
-                <th className="text-left px-6 py-3">Buyer</th>
-                <th className="text-left px-6 py-3">Car</th>
-                <th className="text-left px-6 py-3">Status</th>
-                <th className="text-left px-6 py-3">Date</th>
-                <th className="text-left px-6 py-3">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentLeads.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-center py-12 text-vgray">
-                    No leads yet — they'll appear here when buyers enquire
-                  </td>
-                </tr>
-              ) : (
-                recentLeads.map(lead => (
-                  <tr key={lead.id} className="border-t border-vgray-border hover:bg-vgray-light/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-dark">{lead.buyerName}</div>
-                      <div className="text-xs text-orange font-semibold mt-0.5">
-                        {lead.buyerPhone}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-vgray">
-                      {lead.car.year} {lead.car.make} {lead.car.model}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full ${STATUS_STYLES[lead.status] || ''}`}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                        {lead.status.replace(/_/g, ' ')}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-xs text-vgray">
+        {recentLeads.length === 0 ? (
+          <p className="text-center py-12 text-sm text-vgray">
+            No leads yet — they'll appear here when buyers enquire
+          </p>
+        ) : (
+          <>
+            {/* Mobile cards */}
+            <div className="md:hidden divide-y divide-vgray-border">
+              {recentLeads.map(lead => (
+                <div key={lead.id} className="p-4 space-y-2">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-semibold text-dark text-sm">{lead.buyerName}</div>
+                      <div className="text-xs text-orange font-semibold mt-0.5">{lead.buyerPhone}</div>
+                    </div>
+                    <span className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-full shrink-0 ${STATUS_STYLES[lead.status] || ''}`}>
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      {lead.status.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+                  <div className="text-xs text-vgray">
+                    {lead.car.year} {lead.car.make} {lead.car.model}
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="text-xs text-vgray">
                       {new Date(lead.createdAt).toLocaleDateString('en-KE')}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
-                        <a
-                          href={`tel:${lead.buyerPhone}`}
-                          className="text-xs font-bold bg-orange-light text-orange-dark px-3 py-1.5 rounded-lg hover:bg-orange hover:text-white transition-colors"
-                        >
-                          📞 Call
-                        </a>
-                        <Link
-                          href={`/dashboard/leads?id=${lead.id}`}
-                          className="text-xs font-bold bg-vgray-light text-vgray px-3 py-1.5 rounded-lg hover:bg-dark hover:text-white transition-colors"
-                        >
-                          📝 Note
-                        </Link>
-                      </div>
-                    </td>
+                    </div>
+                    <div className="flex gap-2">
+                      <a
+                        href={`tel:${lead.buyerPhone}`}
+                        className="text-xs font-bold bg-orange-light text-orange-dark px-3 py-1.5 rounded-lg hover:bg-orange hover:text-white transition-colors"
+                      >
+                        📞 Call
+                      </a>
+                      <Link
+                        href={`/dashboard/leads?id=${lead.id}`}
+                        className="text-xs font-bold bg-vgray-light text-vgray px-3 py-1.5 rounded-lg hover:bg-dark hover:text-white transition-colors"
+                      >
+                        📝 Note
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop table */}
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-vgray-light text-xs font-bold text-vgray uppercase tracking-widest">
+                    <th className="text-left px-6 py-3">Buyer</th>
+                    <th className="text-left px-6 py-3">Car</th>
+                    <th className="text-left px-6 py-3">Status</th>
+                    <th className="text-left px-6 py-3">Date</th>
+                    <th className="text-left px-6 py-3">Action</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  {recentLeads.map(lead => (
+                    <tr key={lead.id} className="border-t border-vgray-border hover:bg-vgray-light/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="font-semibold text-dark">{lead.buyerName}</div>
+                        <div className="text-xs text-orange font-semibold mt-0.5">{lead.buyerPhone}</div>
+                      </td>
+                      <td className="px-6 py-4 text-vgray">
+                        {lead.car.year} {lead.car.make} {lead.car.model}
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full ${STATUS_STYLES[lead.status] || ''}`}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                          {lead.status.replace(/_/g, ' ')}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-xs text-vgray">
+                        {new Date(lead.createdAt).toLocaleDateString('en-KE')}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-2">
+                          <a
+                            href={`tel:${lead.buyerPhone}`}
+                            className="text-xs font-bold bg-orange-light text-orange-dark px-3 py-1.5 rounded-lg hover:bg-orange hover:text-white transition-colors"
+                          >
+                            📞 Call
+                          </a>
+                          <Link
+                            href={`/dashboard/leads?id=${lead.id}`}
+                            className="text-xs font-bold bg-vgray-light text-vgray px-3 py-1.5 rounded-lg hover:bg-dark hover:text-white transition-colors"
+                          >
+                            📝 Note
+                          </Link>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
