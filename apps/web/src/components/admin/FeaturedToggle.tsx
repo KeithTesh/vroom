@@ -31,7 +31,7 @@ export default function FeaturedToggle({
       onClick={toggle}
       disabled={loading}
       title={active ? 'Remove from homepage' : 'Feature on homepage'}
-      className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1.5 ${
+      className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50 flex items-center gap-1.5 cursor-pointer ${
         active
           ? 'bg-orange text-white'
           : 'bg-vgray-light text-vgray hover:bg-orange-light hover:text-orange-dark border border-vgray-border'

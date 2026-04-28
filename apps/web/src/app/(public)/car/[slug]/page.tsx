@@ -155,7 +155,7 @@ export default async function CarDetailPage({
           {/* Price + enquiry */}
           <div className="bg-white border border-vgray-border rounded-card p-6">
             <div className="bg-orange-light border border-orange-mid rounded-xl p-5 mb-5">
-              <div className="font-display text-3xl font-extrabold text-orange mb-1">
+              <div className="font-display text-xl md:text-2xl font-extrabold text-orange mb-1 break-words">
                 {formattedPrice}
               </div>
               <div className="text-xs text-orange-dark font-medium">
@@ -167,7 +167,7 @@ export default async function CarDetailPage({
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#1aad4f] text-white font-bold py-3.5 rounded-xl mb-3 transition-colors shadow-md"
+              className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#1aad4f] text-white font-bold py-3.5 rounded-xl mb-3 transition-colors shadow-md cursor-pointer"
             >
               <MessageCircle size={18} />
               Enquire on WhatsApp
@@ -175,7 +175,7 @@ export default async function CarDetailPage({
 
             <a
               href={`tel:+${WA_NUMBER}`}
-              className="flex items-center justify-center gap-2 w-full bg-white text-dark font-bold py-3.5 rounded-xl border-2 border-vgray-border hover:border-orange hover:text-orange transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-white text-dark font-bold py-3.5 rounded-xl border-2 border-vgray-border hover:border-orange hover:text-orange transition-colors cursor-pointer"
             >
               <Phone size={16} />
               Call us now
