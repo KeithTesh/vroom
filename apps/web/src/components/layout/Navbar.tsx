@@ -24,8 +24,7 @@ export default function Navbar() {
             { label: 'Home',        href: '/' },
             { label: 'Browse cars', href: '/browse' },
             { label: 'How it works', href: '/#how-it-works' },
-            { label: 'Finance',      href: '/#finance' },
-            { label: 'Contact',      href: '/#contact' },
+            { label: 'Contact',      href: '/contact' },
           ].map(l => (
             <Link
               key={l.href}
@@ -67,8 +66,7 @@ export default function Navbar() {
             { label: 'Home',         href: '/' },
             { label: 'Browse cars',  href: '/browse' },
             { label: 'How it works', href: '/#how-it-works' },
-            { label: 'Finance',      href: '/#finance' },
-            { label: 'Contact',      href: '/#contact' },
+            { label: 'Contact',      href: '/contact' },
           ].map(l => (
             <Link
               key={l.href}
