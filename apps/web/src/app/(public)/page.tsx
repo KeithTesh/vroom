@@ -3,7 +3,7 @@ import { MessageCircle, Search, Shield, Zap, Star } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import CarCard from '@/components/cars/CarCard'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 

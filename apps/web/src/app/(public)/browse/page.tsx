@@ -3,7 +3,7 @@ import CarCard from '@/components/cars/CarCard'
 import { Search } from 'lucide-react'
 import Link from 'next/link'
 
-export const revalidate = 60
+export const dynamic = 'force-dynamic'
 
 import type { Metadata } from 'next'
 
